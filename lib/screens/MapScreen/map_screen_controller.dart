@@ -26,6 +26,8 @@ class MyMapController extends GetxController with WidgetsBindingObserver{
   RxBool toControllerStatus = false.obs;
   RxBool isUserselectedFromPlace = false.obs;
   RxBool isUserselectedToPlace = false.obs;
+  RxBool isgettingsuggestion = false.obs;
+
   RxDouble distanceInKm = 0.0.obs;
   Rx<g.LatLng> toLatLong = g.LatLng(0, 0).obs;
   Rx<g.LatLng> fromLatLong = g.LatLng(0, 0).obs;
@@ -164,7 +166,7 @@ class MyMapController extends GetxController with WidgetsBindingObserver{
     }
   }
   Future<void> getToPlaceSuggestions(String input) async {
-
+    isgettingsuggestion.value = true;
     if (sessionToken.value.isEmpty) {
       sessionToken.value = Uuid().v4();
     }
@@ -177,8 +179,9 @@ class MyMapController extends GetxController with WidgetsBindingObserver{
     try {
       final response = await http.get(Uri.parse(request));
       final data = json.decode(response.body);
-      log("Data: ${data.toString()}");
+      log("getToPlaceSuggestions: ${data.toString()}");
       if (data['status'] == 'OK') {
+        //log("Data: ${data}");
         toPlaceList.value = data['predictions'];
       } else {
         toPlaceList.clear();
@@ -189,6 +192,7 @@ class MyMapController extends GetxController with WidgetsBindingObserver{
   }
 
   Future<void> getFromPlaceSuggestions(String input) async {
+isgettingsuggestion.value = true;
     if (sessionToken.value.isEmpty) {
       sessionToken.value = Uuid().v4();
     }

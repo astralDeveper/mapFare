@@ -200,6 +200,7 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                   controller.fromPlaceList.clear();
                 }),
               if (controller.currentPosition.value != null)
+                controller.isgettingsuggestion.isFalse ?
                 Expanded(
                   child: Obx(
                     () {
@@ -225,7 +226,8 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
                       );
                     },
                   ),
-                ),
+                )
+                :SizedBox(),
               RoundedButton(
                 title: "Go",
                 isDisabled: controller.isUserselectedFromPlace.isFalse ||
@@ -417,11 +419,19 @@ class _GoogleMapScreenState extends State<GoogleMapScreen> {
       child: Obx(
         () {
           return ListView.builder(
+            padding: const EdgeInsets.all(16.0),
             itemCount: placeList.length,
             itemBuilder: (context, index) {
               return ListTile(
-                title: Text(placeList[index]['description']),
-                onTap: () => onTap(index),
+                leading: const Icon(Icons.location_on_rounded),
+                subtitle: Text(placeList[index]['description'],
+                    style: const TextStyle(fontSize: 12),),
+                title: Text(placeList[index]['structured_formatting']['main_text'],
+                    style: const TextStyle(fontSize: 14)),
+                onTap: () {
+                  onTap(index);
+                  controller.isgettingsuggestion.value = false;
+                },
               );
             },
           );
